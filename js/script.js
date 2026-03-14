@@ -268,6 +268,55 @@ function copyEmail(event) {
 }
 
 // ==========================================
+// CASE STUDY IMAGE 3D TILT
+// ==========================================
+function initCaseImageTilt() {
+    const images = document.querySelectorAll('.case-full-image');
+    if (!images.length) return;
+
+    images.forEach(el => {
+        let rafId = null;
+        let currentX = 3, currentY = -4;
+        let targetX = 3, targetY = -4;
+        const BASE_X = 3, BASE_Y = -4;
+
+        function lerp(a, b, t) { return a + (b - a) * t; }
+
+        function tick() {
+            currentX = lerp(currentX, targetX, 0.1);
+            currentY = lerp(currentY, targetY, 0.1);
+            el.style.transform = `perspective(1400px) rotateX(${currentX}deg) rotateY(${currentY}deg)`;
+            rafId = requestAnimationFrame(tick);
+        }
+
+        el.addEventListener('mouseenter', () => {
+            rafId = requestAnimationFrame(tick);
+        });
+
+        el.addEventListener('mousemove', (e) => {
+            const rect = el.getBoundingClientRect();
+            const cx = rect.left + rect.width / 2;
+            const cy = rect.top + rect.height / 2;
+            const dx = (e.clientX - cx) / (rect.width / 2);
+            const dy = (e.clientY - cy) / (rect.height / 2);
+            targetX = BASE_X - dy * 6;
+            targetY = BASE_Y + dx * 8;
+        });
+
+        function resetTilt() {
+            targetX = BASE_X;
+            targetY = BASE_Y;
+            setTimeout(() => {
+                cancelAnimationFrame(rafId);
+                el.style.transform = `perspective(1400px) rotateX(${BASE_X}deg) rotateY(${BASE_Y}deg)`;
+            }, 400);
+        }
+
+        el.addEventListener('mouseleave', resetTilt);
+    });
+}
+
+// ==========================================
 // INIT
 // ==========================================
 function init() {
@@ -279,6 +328,7 @@ function init() {
     initProjectCards();
     initProgressIndicator();
     initPhoneTilt();
+    initCaseImageTilt();
 }
 
 if (document.readyState === 'loading') {
