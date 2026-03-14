@@ -849,21 +849,46 @@ ul {
     width: 200px;
     transform: translate(120px, 20px) rotateY(-20deg) rotateZ(4deg);
     z-index: 1;
-    opacity: 0.85;
+    opacity: 0.75;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.6s ease,
+                box-shadow 0.6s ease;
 }
 
 .phone-mockup--front {
     width: 240px;
     transform: translate(-40px, 0px) rotateY(8deg) rotateZ(-2deg);
     z-index: 2;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.6s ease;
 }
 
+/* Hover — phones fan out, lift, glow */
 .project-showcase:hover .phone-mockup--front {
-    transform: translate(-40px, -12px) rotateY(5deg) rotateZ(-2deg);
+    transform: translate(-70px, -20px) rotateY(4deg) rotateZ(-2deg);
 }
 
 .project-showcase:hover .phone-mockup--back {
-    transform: translate(130px, 10px) rotateY(-18deg) rotateZ(4deg);
+    transform: translate(160px, 0px) rotateY(-16deg) rotateZ(4deg);
+    opacity: 1;
+}
+
+.project-showcase:hover .phone-mockup--front .phone-mockup__frame {
+    box-shadow:
+        0 0 0 1px #333,
+        0 0 0 3px #111,
+        0 0 0 4px #3a3a3a,
+        0 60px 120px rgba(230, 0, 35, 0.35),
+        0 30px 60px rgba(0, 0, 0, 0.6);
+}
+
+.project-showcase:hover .phone-mockup--back .phone-mockup__frame {
+    box-shadow:
+        0 0 0 1px #333,
+        0 0 0 3px #111,
+        0 0 0 4px #3a3a3a,
+        0 40px 80px rgba(230, 0, 35, 0.2),
+        0 20px 40px rgba(0, 0, 0, 0.5);
 }
 
 /* Responsive */

@@ -85,38 +85,34 @@ function initCustomCursor() {
 // ==========================================
 function initMobileMenu() {
     const menuToggle = document.querySelector('.menu-toggle');
-    const navLinks = document.querySelector('.nav-links');
+    const mobileMenu = document.querySelector('.mobile-menu');
+    const mobileLinks = document.querySelectorAll('.mobile-nav-link');
     
-    if (!menuToggle || !navLinks) return;
+    if (!menuToggle || !mobileMenu) return;
     
+    // Toggle menu
     menuToggle.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
         menuToggle.classList.toggle('active');
-        
-        // Animate toggle icon
-        const spans = menuToggle.querySelectorAll('span');
-        if (menuToggle.classList.contains('active')) {
-            spans[0].style.transform = 'rotate(45deg) translate(7px, 7px)';
-            spans[1].style.opacity = '0';
-            spans[2].style.transform = 'rotate(-45deg) translate(7px, -7px)';
-        } else {
-            spans[0].style.transform = 'none';
-            spans[1].style.opacity = '1';
-            spans[2].style.transform = 'none';
-        }
+        mobileMenu.classList.toggle('active');
+        document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
     });
     
-    // Close menu when clicking on a link
-    const navLinksItems = navLinks.querySelectorAll('.nav-link');
-    navLinksItems.forEach(link => {
+    // Close menu when clicking a link
+    mobileLinks.forEach(link => {
         link.addEventListener('click', () => {
-            navLinks.classList.remove('active');
             menuToggle.classList.remove('active');
-            const spans = menuToggle.querySelectorAll('span');
-            spans[0].style.transform = 'none';
-            spans[1].style.opacity = '1';
-            spans[2].style.transform = 'none';
+            mobileMenu.classList.remove('active');
+            document.body.style.overflow = '';
         });
+    });
+    
+    // Close menu when clicking outside
+    mobileMenu.addEventListener('click', (e) => {
+        if (e.target === mobileMenu) {
+            menuToggle.classList.remove('active');
+            mobileMenu.classList.remove('active');
+            document.body.style.overflow = '';
+        }
     });
 }
 
@@ -188,7 +184,8 @@ function initNavbarScroll() {
     
     window.addEventListener('scroll', () => {
         const currentScroll = window.pageYOffset;
-        
+        const atBottom = window.innerHeight + currentScroll >= document.documentElement.scrollHeight - 2;
+
         // Regular nav
         if (nav) {
             if (currentScroll > 100) {
@@ -198,6 +195,13 @@ function initNavbarScroll() {
                 nav.classList.remove('scrolled');
                 document.body.classList.remove('scrolled'); // Hide bottom blur
             }
+        }
+
+        // Hide blur at bottom of page
+        if (atBottom) {
+            document.body.classList.add('at-bottom');
+        } else {
+            document.body.classList.remove('at-bottom');
         }
         
         // Case study nav
@@ -437,6 +441,36 @@ function initFormValidation() {
 // ==========================================
 // INITIALIZE EVERYTHING
 // ==========================================
+// ==========================================
+// PHONE MOCKUP MOUSE TILT
+// ==========================================
+function initPhoneTilt() {
+    const scene = document.querySelector('.pinterest-3d-scene');
+    if (!scene) return;
+
+    const front = scene.querySelector('.phone-mockup--front');
+    const back  = scene.querySelector('.phone-mockup--back');
+
+    scene.addEventListener('mousemove', (e) => {
+        const rect = scene.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top  + rect.height / 2;
+        const dx = (e.clientX - cx) / (rect.width  / 2); // -1 to 1
+        const dy = (e.clientY - cy) / (rect.height / 2); // -1 to 1
+
+        const tiltX =  dy * 10;
+        const tiltY = -dx * 12;
+
+        front.style.transform = `translate(-70px, -20px) rotateX(${tiltX}deg) rotateY(${tiltY + 4}deg) rotateZ(-2deg)`;
+        back.style.transform  = `translate(160px, 0px)  rotateX(${tiltX * 0.7}deg) rotateY(${tiltY - 16}deg) rotateZ(4deg)`;
+    });
+
+    scene.addEventListener('mouseleave', () => {
+        front.style.transform = '';
+        back.style.transform  = '';
+    });
+}
+
 function init() {
     // Core features
     initCustomCursor(); // Custom cursor enabled!
@@ -444,11 +478,12 @@ function init() {
     initScrollAnimations();
     initSmoothScroll();
     initNavbarScroll();
-    
+
     // Optional features
     initProjectCards();
     initProgressIndicator();
     initLazyLoading();
+    initPhoneTilt();
     // initParallax(); // Uncomment if you want parallax
     // initTypingEffect(); // Uncomment if you add data-typing attribute
     // initFormValidation(); // Uncomment if you add a contact form
@@ -534,3 +569,70 @@ function addSkipLink() {
 // ==========================================
 console.log('%c🎨 Nice to see you in the console!', 'font-size: 20px; font-weight: bold; color: #6366f1;');
 console.log('%cInterested in how this was built? Let\'s chat!', 'font-size: 14px; color: #a0a0a0;');
+
+// ==========================================
+// COPY EMAIL FUNCTION
+// ==========================================
+function copyEmail(event) {
+    event.preventDefault();
+    
+    const email = 'kelvinkyeremehh@gmail.com';
+    
+    // Copy to clipboard
+    navigator.clipboard.writeText(email).then(() => {
+        // Show notification
+        const notification = document.getElementById('copyNotification');
+        notification.classList.add('show');
+        
+        // Hide notification after 2 seconds
+        setTimeout(() => {
+            notification.classList.remove('show');
+        }, 2000);
+    }).catch(err => {
+        console.error('Failed to copy email:', err);
+    });
+}
+
+// ==========================================
+// PAGE STATE RESET
+// ==========================================
+// ==========================================
+// FORCE PDF DOWNLOAD (prevent browser preview)
+// ==========================================
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('a[download][href$=".pdf"]').forEach(function (link) {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            var url = this.getAttribute('href');
+            var filename = url.split('/').pop();
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.style.display = 'none';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        });
+    });
+});
+
+// ==========================================
+// Reset page state when navigating back
+window.addEventListener('pageshow', function(event) {
+    if (event.persisted) {
+        // Page was loaded from cache (back/forward button)
+        window.location.reload();
+    }
+});
+
+// Prevent browser from restoring scroll position
+if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+}
+
+// Reset to top on page load
+window.addEventListener('load', function() {
+    setTimeout(function() {
+        window.scrollTo(0, 0);
+    }, 0);
+});
