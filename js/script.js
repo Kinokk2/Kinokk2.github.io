@@ -282,91 +282,55 @@ function initTypingEffect() {
 }
 
 // ==========================================
+// PAGE TRANSITIONS — site-wide fade
+// ==========================================
+function navigateTo(url) {
+    document.body.classList.remove('page-fade-in');
+    document.body.classList.add('page-transitioning');
+    setTimeout(() => { window.location.href = url; }, 450);
+}
+
+function initPageTransitions() {
+    // Fade in on load
+    window.addEventListener('DOMContentLoaded', () => {
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                document.body.classList.add('page-fade-in');
+            });
+        });
+    });
+
+    // Intercept all internal links
+    document.addEventListener('click', (e) => {
+        const link = e.target.closest('a');
+        if (!link) return;
+        if (link.classList.contains('disabled')) return;
+        const href = link.getAttribute('href');
+        if (!href || href.startsWith('#') || href.startsWith('http') || href.startsWith('mailto') || link.hasAttribute('download')) return;
+        e.preventDefault();
+        navigateTo(href);
+    });
+}
+
+// ==========================================
 // PROJECT CARD INTERACTIONS
 // ==========================================
 function initProjectCards() {
+    // Arrow spin on case study links only
     const projectShowcases = document.querySelectorAll('.project-showcase');
-    
     projectShowcases.forEach(showcase => {
         const link = showcase.querySelector('.project-showcase-link');
-        
         if (link && !link.classList.contains('disabled')) {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                
-                const targetUrl = link.getAttribute('href');
-                
-                // Get the hero color from the project
-                let heroColor = '#C49E5F'; // Default
-                const projectImage = showcase.querySelector('.project-main-image');
-                if (projectImage) {
-                    const bgStyle = projectImage.style.background;
-                    // Extract first color from gradient
-                    const colorMatch = bgStyle.match(/#[0-9A-Fa-f]{6}/);
-                    if (colorMatch) {
-                        heroColor = colorMatch[0];
-                    }
-                }
-                
-                // Create transition overlay if it doesn't exist
-                let overlay = document.querySelector('.page-transition-overlay');
-                if (!overlay) {
-                    overlay = document.createElement('div');
-                    overlay.className = 'page-transition-overlay';
-                    document.body.appendChild(overlay);
-                }
-                
-                // Set the overlay color
-                overlay.style.background = heroColor;
-                
-                // Add spinning animation to arrow
+            link.addEventListener('click', () => {
                 const arrow = link.querySelector('.arrow');
                 if (arrow) {
                     arrow.style.display = 'inline-block';
                     arrow.style.animation = 'spin 0.5s ease-in-out';
                 }
-                
-                // Trigger slide-in transition
-                document.body.classList.add('page-transitioning');
-                
-                // Navigate after transition
-                setTimeout(() => {
-                    window.location.href = targetUrl;
-                }, 600);
             });
         }
     });
 }
-
-// Page transition out on case study pages
-window.addEventListener('DOMContentLoaded', () => {
-    if (document.body.classList.contains('case-study-page')) {
-        const overlay = document.querySelector('.page-transition-overlay');
-        if (overlay) {
-            // Get hero color from body data attribute
-            const heroColor = document.body.getAttribute('data-hero-color') || '#C49E5F';
-            overlay.style.background = heroColor;
-            
-            // Start with overlay covering screen (slide from left)
-            overlay.style.transform = 'translateX(-100%)';
-            overlay.style.transition = 'none';
-            
-            // Force reflow
-            overlay.offsetHeight;
-            
-            // Re-enable transition
-            overlay.style.transition = 'transform 0.6s cubic-bezier(0.77, 0, 0.175, 1)';
-            
-            // Slide in then out
-            setTimeout(() => {
-                overlay.style.transform = 'translateX(0)';
-            }, 50);
-            
-            setTimeout(() => {
-                overlay.style.transform = 'translateX(100%)';
-            }, 400);
-        }
-    }
 });
 
 // Add spin animation to CSS
@@ -514,7 +478,8 @@ function initPhoneTilt() {
 
 function init() {
     // Core features
-    initCustomCursor(); // Custom cursor enabled!
+    initPageTransitions();
+    initCustomCursor();
     initMobileMenu();
     initScrollAnimations();
     initSmoothScroll();
@@ -525,9 +490,6 @@ function init() {
     initProgressIndicator();
     initLazyLoading();
     initPhoneTilt();
-    // initParallax(); // Uncomment if you want parallax
-    // initTypingEffect(); // Uncomment if you add data-typing attribute
-    // initFormValidation(); // Uncomment if you add a contact form
 }
 
 // Run when DOM is loaded

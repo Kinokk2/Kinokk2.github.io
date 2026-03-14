@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+    <div class="page-transition-overlay"></div>
     <!-- Navigation -->
     <nav class="nav">
         <div class="nav-container">
@@ -20,7 +21,12 @@
                 <li><a href="about.html" class="nav-link active">About</a></li>
             </ul>
             <div class="nav-actions">
-                <a href="../kelvin-kyeremeh-resume.pdf" class="resume-btn" download>
+                <a href="https://www.linkedin.com/in/kelvin-kyeremeh-b61089263/" target="_blank" rel="noopener noreferrer" class="linkedin-icon" aria-label="LinkedIn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                    </svg>
+                </a>
+                <a href="kelvin-kyeremeh-resume.pdf" download class="resume-btn">
                     Resume <span class="download-icon">↓</span>
                 </a>
             </div>
@@ -29,6 +35,15 @@
                 <span></span>
                 <span></span>
             </button>
+        </div>
+        <!-- Mobile Menu Overlay -->
+        <div class="mobile-menu">
+            <ul class="mobile-menu-links">
+                <li><a href="index.html" class="mobile-nav-link">Work</a></li>
+                <li><a href="stack.html" class="mobile-nav-link">Stack</a></li>
+                <li><a href="about.html" class="mobile-nav-link">About</a></li>
+                <li><a href="kelvin-kyeremeh-resume.pdf" download class="mobile-nav-link">Resume</a></li>
+            </ul>
         </div>
     </nav>
 
@@ -47,106 +62,11 @@
                 <div class="about-content">
                     <h1 class="about-title">Designer crafting meaningful digital experiences</h1>
                     <div class="about-text">
-                        <p>I'm a UX/UI designer with a passion for creating intuitive, user-centered digital products. With <strong>X years of experience</strong>, I've worked with startups and established companies to solve complex design challenges.</p>
-                        <p>My approach combines thorough research, iterative design, and close collaboration with developers and stakeholders to deliver solutions that not only look great but solve real user problems.</p>
-                        <p>When I'm not designing, you'll find me [add your hobbies/interests - makes you memorable and human].</p>
+                        <p>I started as a digital artist. Then I realized I cared just as much about how things function as how they look.</p>
+                        <p>UX/UI design lets me combine both — crafting interfaces that are visually thoughtful and structurally clear.</p>
+                        <p>With experience in Figma, Illustrator, Photoshop, Clip Studio, and Procreate, I design digital experiences that don't just look good — they make sense.</p>
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Skills & Tools -->
-    <section class="skills-section">
-        <div class="container">
-            <h2 class="section-title">Skills & Tools</h2>
-            <div class="skills-grid">
-                <div class="skill-category">
-                    <h3>Design</h3>
-                    <ul>
-                        <li>User Research</li>
-                        <li>Wireframing</li>
-                        <li>Prototyping</li>
-                        <li>Visual Design</li>
-                        <li>Design Systems</li>
-                        <li>Usability Testing</li>
-                    </ul>
-                </div>
-                <div class="skill-category">
-                    <h3>Tools</h3>
-                    <ul>
-                        <li>Figma</li>
-                        <li>Adobe XD</li>
-                        <li>Sketch</li>
-                        <li>Photoshop</li>
-                        <li>Illustrator</li>
-                        <li>Miro</li>
-                    </ul>
-                </div>
-                <div class="skill-category">
-                    <h3>Development</h3>
-                    <ul>
-                        <li>HTML/CSS</li>
-                        <li>JavaScript Basics</li>
-                        <li>Responsive Design</li>
-                        <li>Accessibility (WCAG)</li>
-                        <li>Git Version Control</li>
-                    </ul>
-                </div>
-                <div class="skill-category">
-                    <h3>Soft Skills</h3>
-                    <ul>
-                        <li>Cross-functional Collaboration</li>
-                        <li>Stakeholder Management</li>
-                        <li>Presenting & Storytelling</li>
-                        <li>Problem Solving</li>
-                        <li>Agile/Scrum</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Experience (Optional) -->
-    <section class="experience-section">
-        <div class="container">
-            <h2 class="section-title">Experience</h2>
-            <div class="timeline">
-                <div class="timeline-item">
-                    <div class="timeline-date">2023 - Present</div>
-                    <div class="timeline-content">
-                        <h3>Senior UX/UI Designer</h3>
-                        <p class="company">Company Name</p>
-                        <p>Brief description of your role and key achievements. Focus on impact and results.</p>
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-date">2021 - 2023</div>
-                    <div class="timeline-content">
-                        <h3>UX/UI Designer</h3>
-                        <p class="company">Previous Company</p>
-                        <p>Another role description highlighting your growth and contributions.</p>
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-date">2019 - 2021</div>
-                    <div class="timeline-content">
-                        <h3>Junior Designer</h3>
-                        <p class="company">First Company</p>
-                        <p>Where you started your journey and learned the fundamentals.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA -->
-    <section class="cta-section">
-        <div class="container">
-            <div class="cta-content">
-                <h2>Interested in working together?</h2>
-                <p>I'm currently available for freelance projects and full-time opportunities.</p>
-                <a href="index.html#contact" class="cta-button">Get in touch</a>
             </div>
         </div>
     </section>
@@ -156,11 +76,6 @@
         <div class="container">
             <div class="footer-content">
                 <p>&copy; 2024 Kelvin Kyeremeh. All rights reserved.</p>
-                <div class="footer-links">
-                    <a href="https://www.linkedin.com/in/kelvin-kyeremeh-b61089263" target="_blank">LinkedIn</a>
-                    <a href="https://dribbble.com/yourprofile" target="_blank">Dribbble</a>
-                    <a href="https://behance.net/yourprofile" target="_blank">Behance</a>
-                </div>
             </div>
         </div>
     </footer>
