@@ -471,12 +471,21 @@ function initPhoneTilt() {
         rafId = requestAnimationFrame(animate);
     }
 
-    let leaveTimeout = null;
     let isHovering = false;
+
+    function reset() {
+        isHovering = false;
+        targetFront = { x: 0, y: 0 };
+        targetBack  = { x: 0, y: 0 };
+        currentFront = { x: 0, y: 0 };
+        currentBack  = { x: 0, y: 0 };
+        cancelAnimationFrame(rafId);
+        front.style.transform = '';
+        back.style.transform  = '';
+    }
 
     scene.addEventListener('mouseenter', () => {
         isHovering = true;
-        clearTimeout(leaveTimeout);
         cancelAnimationFrame(rafId);
         rafId = requestAnimationFrame(animate);
     });
@@ -484,13 +493,8 @@ function initPhoneTilt() {
     scene.addEventListener('mousemove', (e) => {
         if (!isHovering) return;
         const rect = scene.getBoundingClientRect();
-        // Guard: ignore if pointer is actually outside the element
-        if (e.clientX < rect.left || e.clientX > rect.right ||
-            e.clientY < rect.top  || e.clientY > rect.bottom) return;
-
         const dx = (e.clientX - rect.left - rect.width  / 2) / (rect.width  / 2);
         const dy = (e.clientY - rect.top  - rect.height / 2) / (rect.height / 2);
-
         targetFront.x =  dy * 18;
         targetFront.y = -dx * 22;
         targetBack.x  =  dy * 12;
@@ -498,19 +502,14 @@ function initPhoneTilt() {
     });
 
     scene.addEventListener('mouseleave', (e) => {
-        // Ignore if the relatedTarget is still inside the scene (e.g. child element)
         if (scene.contains(e.relatedTarget)) return;
-        isHovering = false;
-        targetFront = { x: 0, y: 0 };
-        targetBack  = { x: 0, y: 0 };
-        leaveTimeout = setTimeout(() => {
-            cancelAnimationFrame(rafId);
-            front.style.transform = '';
-            back.style.transform  = '';
-            currentFront = { x: 0, y: 0 };
-            currentBack  = { x: 0, y: 0 };
-        }, 600);
+        reset();
     });
+
+    // Kill tilt when mouse leaves the browser window entirely
+    document.addEventListener('mouseleave', reset);
+    // Kill tilt when tab loses focus (switching screens/apps)
+    window.addEventListener('blur', reset);
 }
 
 function init() {
