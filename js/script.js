@@ -465,8 +465,8 @@ function initPhoneTilt() {
         currentBack.x  = lerp(currentBack.x,  targetBack.x,  0.10);
         currentBack.y  = lerp(currentBack.y,  targetBack.y,  0.10);
 
-        front.style.transform = `translate(-90px, -28px) rotateX(${currentFront.x}deg) rotateY(${currentFront.y + 4}deg) rotateZ(-2deg)`;
-        back.style.transform  = `translate(200px, 0px)   rotateX(${currentBack.x}deg)  rotateY(${currentBack.y - 18}deg) rotateZ(4deg)`;
+        front.style.transform = `translate(-60px, -20px) rotateX(${currentFront.x}deg) rotateY(${currentFront.y + 8}deg) rotateZ(-2deg)`;
+        back.style.transform  = `translate(150px, -10px) rotateX(${currentBack.x}deg)  rotateY(${currentBack.y - 22}deg) rotateZ(4deg)`;
 
         rafId = requestAnimationFrame(animate);
     }
