@@ -451,23 +451,50 @@ function initPhoneTilt() {
     const front = scene.querySelector('.phone-mockup--front');
     const back  = scene.querySelector('.phone-mockup--back');
 
+    let rafId = null;
+    let targetFront = { x: 0, y: 0 };
+    let targetBack  = { x: 0, y: 0 };
+    let currentFront = { x: 0, y: 0 };
+    let currentBack  = { x: 0, y: 0 };
+
+    function lerp(a, b, t) { return a + (b - a) * t; }
+
+    function animate() {
+        currentFront.x = lerp(currentFront.x, targetFront.x, 0.12);
+        currentFront.y = lerp(currentFront.y, targetFront.y, 0.12);
+        currentBack.x  = lerp(currentBack.x,  targetBack.x,  0.10);
+        currentBack.y  = lerp(currentBack.y,  targetBack.y,  0.10);
+
+        front.style.transform = `translate(-90px, -28px) rotateX(${currentFront.x}deg) rotateY(${currentFront.y + 4}deg) rotateZ(-2deg)`;
+        back.style.transform  = `translate(200px, 0px)   rotateX(${currentBack.x}deg)  rotateY(${currentBack.y - 18}deg) rotateZ(4deg)`;
+
+        rafId = requestAnimationFrame(animate);
+    }
+
+    scene.addEventListener('mouseenter', () => {
+        cancelAnimationFrame(rafId);
+        rafId = requestAnimationFrame(animate);
+    });
+
     scene.addEventListener('mousemove', (e) => {
         const rect = scene.getBoundingClientRect();
-        const cx = rect.left + rect.width / 2;
-        const cy = rect.top  + rect.height / 2;
-        const dx = (e.clientX - cx) / (rect.width  / 2); // -1 to 1
-        const dy = (e.clientY - cy) / (rect.height / 2); // -1 to 1
+        const dx = (e.clientX - rect.left - rect.width  / 2) / (rect.width  / 2);
+        const dy = (e.clientY - rect.top  - rect.height / 2) / (rect.height / 2);
 
-        const tiltX =  dy * 10;
-        const tiltY = -dx * 12;
-
-        front.style.transform = `translate(-70px, -20px) rotateX(${tiltX}deg) rotateY(${tiltY + 4}deg) rotateZ(-2deg)`;
-        back.style.transform  = `translate(160px, 0px)  rotateX(${tiltX * 0.7}deg) rotateY(${tiltY - 16}deg) rotateZ(4deg)`;
+        targetFront.x =  dy * 18;
+        targetFront.y = -dx * 22;
+        targetBack.x  =  dy * 12;
+        targetBack.y  = -dx * 16;
     });
 
     scene.addEventListener('mouseleave', () => {
-        front.style.transform = '';
-        back.style.transform  = '';
+        targetFront = { x: 0, y: 0 };
+        targetBack  = { x: 0, y: 0 };
+        setTimeout(() => {
+            cancelAnimationFrame(rafId);
+            front.style.transform = '';
+            back.style.transform  = '';
+        }, 500);
     });
 }
 
