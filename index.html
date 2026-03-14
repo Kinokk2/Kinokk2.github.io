@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kelvin Kyeremeh - UX/UI Designer</title>
-    <meta name="description" content="UX/UI Designer creating thoughtful digital experiences">
+    <meta name="description" content="Portfolio of Kelvin Kyeremeh, UX/UI Designer specializing in user-centered digital experiences">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -20,7 +20,12 @@
                 <li><a href="about.html" class="nav-link">About</a></li>
             </ul>
             <div class="nav-actions">
-                <a href="kelvin-kyeremeh-resume.pdf" class="resume-btn" download>
+                <a href="https://www.linkedin.com/in/kelvin-kyeremeh-b61089263/" target="_blank" rel="noopener noreferrer" class="linkedin-icon" aria-label="LinkedIn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                    </svg>
+                </a>
+                <a href="kelvin-kyeremeh-resume.pdf" download class="resume-btn">
                     Resume <span class="download-icon">↓</span>
                 </a>
             </div>
@@ -30,6 +35,15 @@
                 <span></span>
             </button>
         </div>
+        <!-- Mobile Menu Overlay -->
+        <div class="mobile-menu">
+            <ul class="mobile-menu-links">
+                <li><a href="index.html" class="mobile-nav-link">Work</a></li>
+                <li><a href="stack.html" class="mobile-nav-link">Stack</a></li>
+                <li><a href="about.html" class="mobile-nav-link">About</a></li>
+                <li><a href="kelvin-kyeremeh-resume.pdf" download class="mobile-nav-link">Resume</a></li>
+            </ul>
+        </div>
     </nav>
 
     <!-- Hero Section -->
@@ -38,10 +52,10 @@
             <div class="hero-content">
                 <h1 class="hero-title">
                     <span class="hero-title-line">UX/UI Designer</span>
-                    <span class="hero-title-line">crafting digital</span>
-                    <span class="hero-title-line">experiences</span>
+                    <span class="hero-title-line">designing clarity</span>
+                    <span class="hero-title-line">in a noisy world</span>
                 </h1>
-                <p class="hero-subtitle">Currently available for freelance work & full-time opportunities</p>
+                <p class="hero-subtitle">Available for freelance & full-time roles</p>
             </div>
             <div class="scroll-indicator">
                 <span>Scroll to explore</span>
@@ -57,21 +71,29 @@
             <article class="project-showcase" data-project="1">
                 <div class="project-content">
                     <div class="project-text">
-                        <h2 class="project-showcase-title">Pinterest Sections</h2>
-                        <p class="project-showcase-description">Redesigned Pinterest's sections feature to improve accessibility and reduce interface clutter. Streamlined navigation patterns made organizing pins more intuitive.</p>
+                        <h2 class="project-showcase-title">Pinterest, Organized</h2>
+                        <p class="project-showcase-description">Improving the visibility and usability of Sections to help users better manage saved content and reduce clutter. Making organization tools easier to discover and use.</p>
                         <a href="case-studies/pinterest-redesign.html" class="project-showcase-link">
                             OPEN CASE STUDY <span class="arrow">→</span>
                         </a>
                     </div>
-                    <div class="project-visual">
-                        <div class="project-main-image" style="background: linear-gradient(135deg, #E60023 0%, #BD081C 100%);">
-                            <div class="image-placeholder">
-                                <span>Pinterest Hero Image</span>
+                    <div class="project-visual pinterest-3d-scene">
+                        <div class="phone-mockup phone-mockup--back">
+                            <div class="phone-mockup__frame">
+                                <div class="phone-mockup__notch"></div>
+                                <div class="phone-mockup__screen">
+                                    <img src="images/pinterest-hero.png" alt="Pinterest app" />
+                                </div>
+                                <div class="phone-mockup__bar"></div>
                             </div>
                         </div>
-                        <div class="project-preview-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
-                            <div class="image-placeholder">
-                                <span>Preview</span>
+                        <div class="phone-mockup phone-mockup--front">
+                            <div class="phone-mockup__frame">
+                                <div class="phone-mockup__notch"></div>
+                                <div class="phone-mockup__screen">
+                                    <img src="images/pinterest-hero.png" alt="Pinterest app" />
+                                </div>
+                                <div class="phone-mockup__bar"></div>
                             </div>
                         </div>
                     </div>
@@ -82,8 +104,8 @@
             <article class="project-showcase" data-project="2">
                 <div class="project-content">
                     <div class="project-text">
-                        <h2 class="project-showcase-title">USPS Tracking</h2>
-                        <p class="project-showcase-description">Redesigned the USPS mobile app's tracking experience to simplify package management. Streamlined navigation and improved information hierarchy.</p>
+                        <h2 class="project-showcase-title">USPS, Modernized</h2>
+                        <p class="project-showcase-description">Modernizing package tracking for clarity and ease of use. Redesigned the USPS mobile app to help users understand delivery progress at a glance with a cleaner interface.</p>
                         <a href="case-studies/usps-redesign.html" class="project-showcase-link">
                             OPEN CASE STUDY <span class="arrow">→</span>
                         </a>
@@ -131,40 +153,18 @@
         </div>
     </section>
 
-    <!-- Contact Section -->
-    <section class="contact" id="contact">
-        <div class="container">
-            <div class="contact-content">
-                <h2 class="contact-title">Let's work together</h2>
-                <p class="contact-subtitle">I'm always interested in hearing about new projects and opportunities.</p>
-                <div class="contact-links">
-                    <a href="/cdn-cgi/l/email-protection#a2dbcdd7d08cc7cfc3cbcee2c7dac3cfd2cec78cc1cdcf" class="contact-link">
-                        <span class="contact-label">Email</span>
-                        <span class="contact-value"><span class="__cf_email__" data-cfemail="88f1e7fdfaa6ede5e9e1e4c8edf0e9e5f8e4eda6ebe7e5">[email&#160;protected]</span></span>
-                    </a>
-                    <a href="https://www.linkedin.com/in/kelvin-kyeremeh-b61089263" target="_blank" class="contact-link">
-                        <span class="contact-label">LinkedIn</span>
-                        <span class="contact-value">Connect with me</span>
-                    </a>
-                    <a href="kelvin-kyeremeh-resume.pdf" target="_blank" class="contact-link">
-                        <span class="contact-label">Resume</span>
-                        <span class="contact-value">Download PDF</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
+    <!-- Get in Touch Section -->
+    <div class="get-in-touch">
+        <p class="get-in-touch-label">Get in touch</p>
+        <span class="email-link" id="emailLink" onclick="copyEmail(event)">kelvinkyeremehh&#64;gmail.com</span>
+        <span class="copy-notification" id="copyNotification">Email copied!</span>
+    </div>
 
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
                 <p>&copy; 2024 Kelvin Kyeremeh. All rights reserved.</p>
-                <div class="footer-links">
-                    <a href="https://www.linkedin.com/in/kelvin-kyeremeh-b61089263" target="_blank">LinkedIn</a>
-                    <a href="https://dribbble.com/yourprofile" target="_blank">Dribbble</a>
-                    <a href="https://behance.net/yourprofile" target="_blank">Behance</a>
-                </div>
             </div>
         </div>
     </footer>
