@@ -471,13 +471,23 @@ function initPhoneTilt() {
         rafId = requestAnimationFrame(animate);
     }
 
+    let leaveTimeout = null;
+    let isHovering = false;
+
     scene.addEventListener('mouseenter', () => {
+        isHovering = true;
+        clearTimeout(leaveTimeout);
         cancelAnimationFrame(rafId);
         rafId = requestAnimationFrame(animate);
     });
 
     scene.addEventListener('mousemove', (e) => {
+        if (!isHovering) return;
         const rect = scene.getBoundingClientRect();
+        // Guard: ignore if pointer is actually outside the element
+        if (e.clientX < rect.left || e.clientX > rect.right ||
+            e.clientY < rect.top  || e.clientY > rect.bottom) return;
+
         const dx = (e.clientX - rect.left - rect.width  / 2) / (rect.width  / 2);
         const dy = (e.clientY - rect.top  - rect.height / 2) / (rect.height / 2);
 
@@ -487,14 +497,19 @@ function initPhoneTilt() {
         targetBack.y  = -dx * 16;
     });
 
-    scene.addEventListener('mouseleave', () => {
+    scene.addEventListener('mouseleave', (e) => {
+        // Ignore if the relatedTarget is still inside the scene (e.g. child element)
+        if (scene.contains(e.relatedTarget)) return;
+        isHovering = false;
         targetFront = { x: 0, y: 0 };
         targetBack  = { x: 0, y: 0 };
-        setTimeout(() => {
+        leaveTimeout = setTimeout(() => {
             cancelAnimationFrame(rafId);
             front.style.transform = '';
             back.style.transform  = '';
-        }, 500);
+            currentFront = { x: 0, y: 0 };
+            currentBack  = { x: 0, y: 0 };
+        }, 600);
     });
 }
 
