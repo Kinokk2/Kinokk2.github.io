@@ -97,9 +97,9 @@ function initScrollAnimations() {
         entries.forEach(entry => {
             if (entry.isIntersecting) entry.target.classList.add('in-view');
         });
-    }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
 
-    document.querySelectorAll('.project-showcase, .case-section').forEach(el => {
+    document.querySelectorAll('.project-showcase, .case-section, .fade-up').forEach(el => {
         observer.observe(el);
     });
 }
