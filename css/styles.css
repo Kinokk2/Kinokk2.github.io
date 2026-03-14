@@ -878,8 +878,7 @@ ul {
         0 0 0 1px #333,
         0 0 0 3px #111,
         0 0 0 4px #3a3a3a,
-        0 60px 120px rgba(230, 0, 35, 0.35),
-        0 30px 60px rgba(0, 0, 0, 0.6);
+        0 60px 120px rgba(0, 0, 0, 0.5);
 }
 
 .project-showcase:hover .phone-mockup--back .phone-mockup__frame {
@@ -887,8 +886,7 @@ ul {
         0 0 0 1px #333,
         0 0 0 3px #111,
         0 0 0 4px #3a3a3a,
-        0 40px 80px rgba(230, 0, 35, 0.2),
-        0 20px 40px rgba(0, 0, 0, 0.5);
+        0 40px 80px rgba(0, 0, 0, 0.4);
 }
 
 /* Responsive */
