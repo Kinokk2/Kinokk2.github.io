@@ -2,6 +2,7 @@
    KELVIN KYEREMEH — PORTFOLIO JAVASCRIPT
    ========================================== */
 
+
 // ==========================================
 // CUSTOM CURSOR
 // ==========================================
@@ -18,35 +19,69 @@ function initCustomCursor() {
         return;
     }
 
-    let mouseX = 0, mouseY = 0;
-    let cursorX = 0, cursorY = 0;
-    let followerX = 0, followerY = 0;
+    let mouseX = -100, mouseY = -100;
+    let cursorX = -100, cursorY = -100;
+    let followerX = -100, followerY = -100;
+    let cursorScale = 1, followerScale = 1;
+    let rafId = null;
 
+    let started = false;
     document.addEventListener('mousemove', (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
-    });
+        if (!started) {
+            cursorX = followerX = mouseX;
+            cursorY = followerY = mouseY;
+            started = true;
+        }
+        if (!rafId) rafId = requestAnimationFrame(animateCursor);
+    }, { passive: true });
+
+    function lerp(a, b, t) { return a + (b - a) * t; }
 
     function animateCursor() {
-        cursorX += (mouseX - cursorX) * 0.3;
-        cursorY += (mouseY - cursorY) * 0.3;
-        followerX += (mouseX - followerX) * 0.15;
-        followerY += (mouseY - followerY) * 0.15;
+        const dx  = mouseX - cursorX;
+        const dy  = mouseY - cursorY;
+        const fdx = mouseX - followerX;
+        const fdy = mouseY - followerY;
 
-        cursor.style.left = `${cursorX}px`;
-        cursor.style.top  = `${cursorY}px`;
-        cursorFollower.style.left = `${followerX}px`;
-        cursorFollower.style.top  = `${followerY}px`;
+        cursorX   += dx  * 0.35;
+        cursorY   += dy  * 0.35;
+        followerX += fdx * 0.15;
+        followerY += fdy * 0.15;
 
-        requestAnimationFrame(animateCursor);
+        cursorScale   = lerp(cursorScale,   isHovering ? 2   : 1,   0.15);
+        followerScale = lerp(followerScale, isHovering ? 1.5 : 1,   0.12);
+
+        cursor.style.transform         = `translate(${cursorX - 5}px, ${cursorY - 5}px) scale(${cursorScale})`;
+        cursorFollower.style.transform = `translate(${followerX - 20}px, ${followerY - 20}px) scale(${followerScale})`;
+
+        const converged = Math.abs(dx) < 0.1 && Math.abs(dy) < 0.1 &&
+                          Math.abs(fdx) < 0.1 && Math.abs(fdy) < 0.1 &&
+                          Math.abs(cursorScale - (isHovering ? 2 : 1)) < 0.01 &&
+                          Math.abs(followerScale - (isHovering ? 1.5 : 1)) < 0.01;
+        if (converged) { rafId = null; return; }
+        rafId = requestAnimationFrame(animateCursor);
     }
 
-    animateCursor();
-
-    document.querySelectorAll('a, button, .project-showcase, input, textarea').forEach(el => {
-        el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
-        el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
-    });
+    let isHovering = false;
+    const HOVER_SELECTOR = 'a, button, .project-showcase, input, textarea';
+    document.addEventListener('mouseover', (e) => {
+        if (!e.target.closest(HOVER_SELECTOR)) return;
+        if (isHovering) return;
+        isHovering = true;
+        cursor.style.opacity = '0.8';
+        cursorFollower.style.opacity = '0.3';
+        if (!rafId) rafId = requestAnimationFrame(animateCursor);
+    }, { passive: true });
+    document.addEventListener('mouseout', (e) => {
+        if (!e.target.closest(HOVER_SELECTOR)) return;
+        if (e.relatedTarget && e.relatedTarget.closest(HOVER_SELECTOR)) return;
+        isHovering = false;
+        cursor.style.opacity = '1';
+        cursorFollower.style.opacity = '0.5';
+        if (!rafId) rafId = requestAnimationFrame(animateCursor);
+    }, { passive: true });
 
     document.addEventListener('mouseleave', () => {
         cursor.style.opacity = '0';
@@ -93,15 +128,18 @@ function initMobileMenu() {
 // SCROLL ANIMATIONS
 // ==========================================
 function initScrollAnimations() {
+    const els = document.querySelectorAll('.project-showcase, .case-section, .fade-up');
+    if (!els.length) return;
+    let remaining = els.length;
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-            if (entry.isIntersecting) entry.target.classList.add('in-view');
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add('in-view');
+            observer.unobserve(entry.target);
+            if (--remaining === 0) observer.disconnect();
         });
     }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-
-    document.querySelectorAll('.project-showcase, .case-section, .fade-up').forEach(el => {
-        observer.observe(el);
-    });
+    els.forEach(el => observer.observe(el));
 }
 
 // ==========================================
@@ -110,20 +148,29 @@ function initScrollAnimations() {
 function initNavbarScroll() {
     const nav = document.querySelector('.nav');
     const caseNav = document.querySelector('.case-nav');
+    let ticking = false;
+    let scrollHeight = document.documentElement.scrollHeight;
+
+    // Cache scrollHeight — only recalculate on resize
+    window.addEventListener('resize', () => { scrollHeight = document.documentElement.scrollHeight; }, { passive: true });
 
     window.addEventListener('scroll', () => {
-        const scrollY = window.pageYOffset;
-        const atBottom = window.innerHeight + scrollY >= document.documentElement.scrollHeight - 2;
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+            const scrollY = window.pageYOffset;
+            const atBottom = window.innerHeight + scrollY >= scrollHeight - 2;
 
-        if (nav) {
-            nav.classList.toggle('scrolled', scrollY > 100);
-            document.body.classList.toggle('scrolled', scrollY > 100);
-        }
+            if (nav) {
+                nav.classList.toggle('scrolled', scrollY > 100);
+                document.body.classList.toggle('scrolled', scrollY > 100);
+            }
 
-        document.body.classList.toggle('at-bottom', atBottom);
-
-        if (caseNav) caseNav.classList.toggle('scrolled', scrollY > 50);
-    });
+            document.body.classList.toggle('at-bottom', atBottom);
+            if (caseNav) caseNav.classList.toggle('scrolled', scrollY > 50);
+            ticking = false;
+        });
+    }, { passive: true });
 }
 
 // ==========================================
@@ -172,23 +219,6 @@ function initProjectCards() {
 }
 
 // ==========================================
-// READING PROGRESS BAR (case studies)
-// ==========================================
-function initProgressIndicator() {
-    if (!document.querySelector('.case-hero-new')) return;
-
-    const progressBar = document.createElement('div');
-    progressBar.className = 'reading-progress';
-    document.body.appendChild(progressBar);
-
-    window.addEventListener('scroll', () => {
-        const scrolled = window.pageYOffset;
-        const total = document.documentElement.scrollHeight - window.innerHeight;
-        progressBar.style.width = `${(scrolled / total) * 100}%`;
-    });
-}
-
-// ==========================================
 // PHONE MOCKUP MOUSE TILT
 // ==========================================
 function initPhoneTilt() {
@@ -198,51 +228,81 @@ function initPhoneTilt() {
     const front = scene.querySelector('.phone-mockup--front');
     const back  = scene.querySelector('.phone-mockup--back');
 
+    // Resting positions
+    const REST  = { frontX: -60, frontY: 0,   backX: 150, backY: 0,   backOpacity: 0.8 };
+    // Hover positions
+    const HOVER = { frontX: -60, frontY: -28, backX: 190, backY: -10, backOpacity: 1.0 };
+
     let rafId = null;
-    let isHovering = false;
-    let targetFront  = { x: 0, y: 0 };
-    let targetBack   = { x: 0, y: 0 };
-    let currentFront = { x: 0, y: 0 };
-    let currentBack  = { x: 0, y: 0 };
+    let hoverProgress = 0, targetHover = 0;
+    let tiltFront = { x: 0, y: 0 }, targetTiltFront = { x: 0, y: 0 };
+    let tiltBack  = { x: 0, y: 0 }, targetTiltBack  = { x: 0, y: 0 };
 
     const lerp = (a, b, t) => a + (b - a) * t;
 
+    function applyResting() {
+        front.style.transform = `translate(${REST.frontX}px, ${REST.frontY}px) rotateY(8deg) rotateZ(-2deg)`;
+        back.style.transform  = `translate(${REST.backX}px, ${REST.backY}px) rotateY(-22deg) rotateZ(4deg)`;
+        back.style.opacity    = REST.backOpacity;
+    }
+
+    // Set resting state immediately on init
+    applyResting();
+
     function animate() {
-        currentFront.x = lerp(currentFront.x, targetFront.x, 0.12);
-        currentFront.y = lerp(currentFront.y, targetFront.y, 0.12);
-        currentBack.x  = lerp(currentBack.x,  targetBack.x,  0.10);
-        currentBack.y  = lerp(currentBack.y,  targetBack.y,  0.10);
+        hoverProgress = lerp(hoverProgress, targetHover, 0.1);
+        tiltFront.x = lerp(tiltFront.x, targetTiltFront.x, 0.12);
+        tiltFront.y = lerp(tiltFront.y, targetTiltFront.y, 0.12);
+        tiltBack.x  = lerp(tiltBack.x,  targetTiltBack.x,  0.10);
+        tiltBack.y  = lerp(tiltBack.y,  targetTiltBack.y,  0.10);
 
-        front.style.transform = `translate(-60px, -20px) rotateX(${currentFront.x}deg) rotateY(${currentFront.y + 8}deg) rotateZ(-2deg)`;
-        back.style.transform  = `translate(150px, -10px) rotateX(${currentBack.x}deg) rotateY(${currentBack.y - 22}deg) rotateZ(4deg)`;
+        const fx = lerp(REST.frontX, HOVER.frontX, hoverProgress);
+        const fy = lerp(REST.frontY, HOVER.frontY, hoverProgress);
+        const bx = lerp(REST.backX,  HOVER.backX,  hoverProgress);
+        const by = lerp(REST.backY,  HOVER.backY,  hoverProgress);
+        const op = lerp(REST.backOpacity, HOVER.backOpacity, hoverProgress);
 
-        rafId = requestAnimationFrame(animate);
+        front.style.transform = `translate(${fx}px, ${fy}px) rotateX(${tiltFront.x}deg) rotateY(${tiltFront.y + 8}deg) rotateZ(-2deg)`;
+        back.style.transform  = `translate(${bx}px, ${by}px) rotateX(${tiltBack.x}deg) rotateY(${tiltBack.y - 22}deg) rotateZ(4deg)`;
+        back.style.opacity    = op;
+
+        const done = Math.abs(hoverProgress - targetHover) < 0.005 &&
+                     Math.abs(tiltFront.x - targetTiltFront.x) < 0.05 &&
+                     Math.abs(tiltFront.y - targetTiltFront.y) < 0.05 &&
+                     Math.abs(tiltBack.x  - targetTiltBack.x)  < 0.05 &&
+                     Math.abs(tiltBack.y  - targetTiltBack.y)  < 0.05;
+        rafId = done ? null : requestAnimationFrame(animate);
+    }
+
+    function startAnimate() {
+        if (!rafId) rafId = requestAnimationFrame(animate);
     }
 
     function reset() {
-        isHovering = false;
-        targetFront = currentFront = { x: 0, y: 0 };
-        targetBack  = currentBack  = { x: 0, y: 0 };
-        cancelAnimationFrame(rafId);
-        front.style.transform = '';
-        back.style.transform  = '';
+        targetHover = 0;
+        targetTiltFront = { x: 0, y: 0 };
+        targetTiltBack  = { x: 0, y: 0 };
+        startAnimate();
     }
 
     scene.addEventListener('mouseenter', () => {
-        isHovering = true;
-        cancelAnimationFrame(rafId);
-        rafId = requestAnimationFrame(animate);
+        targetHover = 1;
+        startAnimate();
     });
 
+    let sceneRect = scene.getBoundingClientRect();
+    window.addEventListener('resize', () => { sceneRect = scene.getBoundingClientRect(); }, { passive: true });
+    window.addEventListener('scroll', () => { sceneRect = scene.getBoundingClientRect(); }, { passive: true });
+
     scene.addEventListener('mousemove', (e) => {
-        if (!isHovering) return;
-        const rect = scene.getBoundingClientRect();
-        const dx = (e.clientX - rect.left - rect.width  / 2) / (rect.width  / 2);
-        const dy = (e.clientY - rect.top  - rect.height / 2) / (rect.height / 2);
-        targetFront.x =  dy * 18;
-        targetFront.y = -dx * 22;
-        targetBack.x  =  dy * 12;
-        targetBack.y  = -dx * 16;
+        if (targetHover === 0) return;
+        const dx = (e.clientX - sceneRect.left - sceneRect.width  / 2) / (sceneRect.width  / 2);
+        const dy = (e.clientY - sceneRect.top  - sceneRect.height / 2) / (sceneRect.height / 2);
+        targetTiltFront.x =  dy * 18;
+        targetTiltFront.y = -dx * 22;
+        targetTiltBack.x  =  dy * 12;
+        targetTiltBack.y  = -dx * 16;
+        startAnimate();
     });
 
     scene.addEventListener('mouseleave', (e) => {
@@ -267,54 +327,6 @@ function copyEmail(event) {
     }).catch(err => console.error('Failed to copy email:', err));
 }
 
-// ==========================================
-// CASE STUDY IMAGE 3D TILT
-// ==========================================
-function initCaseImageTilt() {
-    const images = document.querySelectorAll('.case-full-image');
-    if (!images.length) return;
-
-    images.forEach(el => {
-        let rafId = null;
-        let currentX = 3, currentY = -4;
-        let targetX = 3, targetY = -4;
-        const BASE_X = 3, BASE_Y = -4;
-
-        function lerp(a, b, t) { return a + (b - a) * t; }
-
-        function tick() {
-            currentX = lerp(currentX, targetX, 0.1);
-            currentY = lerp(currentY, targetY, 0.1);
-            el.style.transform = `perspective(1400px) rotateX(${currentX}deg) rotateY(${currentY}deg)`;
-            rafId = requestAnimationFrame(tick);
-        }
-
-        el.addEventListener('mouseenter', () => {
-            rafId = requestAnimationFrame(tick);
-        });
-
-        el.addEventListener('mousemove', (e) => {
-            const rect = el.getBoundingClientRect();
-            const cx = rect.left + rect.width / 2;
-            const cy = rect.top + rect.height / 2;
-            const dx = (e.clientX - cx) / (rect.width / 2);
-            const dy = (e.clientY - cy) / (rect.height / 2);
-            targetX = BASE_X - dy * 6;
-            targetY = BASE_Y + dx * 8;
-        });
-
-        function resetTilt() {
-            targetX = BASE_X;
-            targetY = BASE_Y;
-            setTimeout(() => {
-                cancelAnimationFrame(rafId);
-                el.style.transform = `perspective(1400px) rotateX(${BASE_X}deg) rotateY(${BASE_Y}deg)`;
-            }, 400);
-        }
-
-        el.addEventListener('mouseleave', resetTilt);
-    });
-}
 
 // ==========================================
 // INIT
@@ -326,9 +338,7 @@ function init() {
     initScrollAnimations();
     initNavbarScroll();
     initProjectCards();
-    initProgressIndicator();
     initPhoneTilt();
-    initCaseImageTilt();
 }
 
 if (document.readyState === 'loading') {
