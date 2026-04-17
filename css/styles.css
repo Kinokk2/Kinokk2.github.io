@@ -962,23 +962,49 @@ ul {
         min-height: auto;
         padding: 3rem 0;
     }
-    
+
     .project-showcase-title {
         font-size: 3.5rem;
     }
-    
+
     .project-visual {
         height: 400px;
     }
-    
+
     .project-main-image {
         width: 90%;
         transform: perspective(1200px) rotateY(-3deg);
     }
-    
+
     .project-preview-card {
         width: 200px;
         height: 240px;
+    }
+
+    /* Pinterest fullbg card — single column, phones scaled */
+    .project-showcase--fullbg {
+        min-height: auto;
+        overflow: hidden;
+    }
+
+    .project-content--fullbg {
+        grid-template-columns: 1fr;
+        padding: 1.5rem 1.5rem 2.5rem;
+        gap: 0;
+    }
+
+    .project-visual--poke {
+        height: 220px;
+        margin-bottom: 0;
+        overflow: hidden;
+    }
+
+    .phone-mockup--front {
+        width: 150px;
+    }
+
+    .phone-mockup--back {
+        width: 130px;
     }
 }
 
@@ -1506,9 +1532,9 @@ body.page-transitioning .page-transition-overlay {
 }
 
 .case-container-wide {
-    max-width: 1400px;
+    max-width: 1000px;
     margin: 0 auto;
-    padding: 0 2rem;
+    padding: 0 3rem;
 }
 
 .case-full-image {
@@ -1516,6 +1542,7 @@ body.page-transitioning .page-transition-overlay {
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    will-change: transform;
 }
 
 .case-full-image .image-placeholder {
@@ -1564,37 +1591,57 @@ body.page-transitioning .page-transition-overlay {
 
 @media (max-width: 768px) {
     .case-nav {
-        padding: 1.5rem 1.5rem;
+        padding: 1.25rem 1.25rem;
     }
-    
+
     .case-container {
-        padding: 0 1.5rem;
+        padding: 0 1.25rem;
     }
-    
+
+    .case-container-wide {
+        padding: 0 1.25rem;
+    }
+
+    .case-section-title-large {
+        font-size: clamp(1.75rem, 8vw, 2.5rem);
+    }
+
+    .case-subsection-title {
+        font-size: 1.125rem;
+    }
+
+    .case-process-header {
+        margin-bottom: 1.25rem;
+    }
+
+    .case-about-section,
+    .case-process-section,
+    .case-visual-section {
+        padding: 2rem 0;
+    }
+
+    .case-two-col {
+        gap: 1rem;
+    }
+
     .pinterest-hero-title {
         font-size: 2.25rem;
         bottom: 4.5rem;
         left: 1.5rem;
     }
-    
+
     .hero-scroll-arrow {
         bottom: 2rem;
     }
-    
+
     .case-hero-title-bottom {
         font-size: 2rem !important;
         bottom: 6rem !important;
         left: 1.5rem !important;
     }
-    
+
     .scroll-down-indicator {
         bottom: 2rem !important;
-    }
-    
-    .case-about-section,
-    .case-process-section,
-    .case-visual-section {
-        padding: 2.5rem 0;
     }
 }
 

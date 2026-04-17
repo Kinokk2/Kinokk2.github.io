@@ -219,6 +219,48 @@ function initProjectCards() {
 }
 
 // ==========================================
+// CASE STUDY IMAGE 3D TILT
+// ==========================================
+function initCaseImageTilt() {
+    const images = document.querySelectorAll('.case-full-image');
+    if (!images.length) return;
+
+    const lerp = (a, b, t) => a + (b - a) * t;
+
+    images.forEach(el => {
+        let rafId = null;
+        let currentX = 0, currentY = 0;
+        let targetX = 0, targetY = 0;
+
+        function tick() {
+            currentX = lerp(currentX, targetX, 0.1);
+            currentY = lerp(currentY, targetY, 0.1);
+            el.style.transform = `perspective(1400px) rotateX(${currentX}deg) rotateY(${currentY}deg)`;
+            if (Math.abs(currentX - targetX) < 0.05 && Math.abs(currentY - targetY) < 0.05) {
+                rafId = null;
+                return;
+            }
+            rafId = requestAnimationFrame(tick);
+        }
+
+        el.addEventListener('mousemove', (e) => {
+            const rect = el.getBoundingClientRect();
+            const dx = (e.clientX - rect.left - rect.width  / 2) / (rect.width  / 2);
+            const dy = (e.clientY - rect.top  - rect.height / 2) / (rect.height / 2);
+            targetX = -dy * 5;
+            targetY =  dx * 7;
+            if (!rafId) rafId = requestAnimationFrame(tick);
+        });
+
+        el.addEventListener('mouseleave', () => {
+            targetX = 0;
+            targetY = 0;
+            if (!rafId) rafId = requestAnimationFrame(tick);
+        });
+    });
+}
+
+// ==========================================
 // PHONE MOCKUP MOUSE TILT
 // ==========================================
 function initPhoneTilt() {
@@ -298,10 +340,10 @@ function initPhoneTilt() {
         if (targetHover === 0) return;
         const dx = (e.clientX - sceneRect.left - sceneRect.width  / 2) / (sceneRect.width  / 2);
         const dy = (e.clientY - sceneRect.top  - sceneRect.height / 2) / (sceneRect.height / 2);
-        targetTiltFront.x =  dy * 18;
-        targetTiltFront.y = -dx * 22;
-        targetTiltBack.x  =  dy * 12;
-        targetTiltBack.y  = -dx * 16;
+        targetTiltFront.x =  dy * 12.6;
+        targetTiltFront.y = -dx * 15.4;
+        targetTiltBack.x  =  dy * 8.4;
+        targetTiltBack.y  = -dx * 11.2;
         startAnimate();
     });
 
@@ -338,6 +380,7 @@ function init() {
     initScrollAnimations();
     initNavbarScroll();
     initProjectCards();
+    initCaseImageTilt();
     initPhoneTilt();
 }
 
