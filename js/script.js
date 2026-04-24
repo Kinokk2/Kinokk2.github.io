@@ -128,7 +128,7 @@ function initMobileMenu() {
 // SCROLL ANIMATIONS
 // ==========================================
 function initScrollAnimations() {
-    const els = document.querySelectorAll('.project-showcase, .case-section, .fade-up');
+    const els = document.querySelectorAll('.project-showcase, .work-card, .case-section, .fade-up');
     if (!els.length) return;
     let remaining = els.length;
     const observer = new IntersectionObserver((entries) => {
@@ -205,8 +205,8 @@ function initPageTransitions() {
 // PROJECT CARD INTERACTIONS
 // ==========================================
 function initProjectCards() {
-    document.querySelectorAll('.project-showcase').forEach(showcase => {
-        const link = showcase.querySelector('.project-showcase-link');
+    document.querySelectorAll('.project-showcase, .work-card').forEach(card => {
+        const link = card.querySelector('.project-showcase-link');
         if (!link || link.classList.contains('disabled')) return;
         link.addEventListener('click', () => {
             const arrow = link.querySelector('.arrow');
@@ -219,46 +219,9 @@ function initProjectCards() {
 }
 
 // ==========================================
-// CASE STUDY IMAGE 3D TILT
+// CASE STUDY IMAGE 3D TILT — disabled, hover handled via CSS
 // ==========================================
-function initCaseImageTilt() {
-    const images = document.querySelectorAll('.case-full-image');
-    if (!images.length) return;
-
-    const lerp = (a, b, t) => a + (b - a) * t;
-
-    images.forEach(el => {
-        let rafId = null;
-        let currentX = 0, currentY = 0;
-        let targetX = 0, targetY = 0;
-
-        function tick() {
-            currentX = lerp(currentX, targetX, 0.1);
-            currentY = lerp(currentY, targetY, 0.1);
-            el.style.transform = `perspective(1400px) rotateX(${currentX}deg) rotateY(${currentY}deg)`;
-            if (Math.abs(currentX - targetX) < 0.05 && Math.abs(currentY - targetY) < 0.05) {
-                rafId = null;
-                return;
-            }
-            rafId = requestAnimationFrame(tick);
-        }
-
-        el.addEventListener('mousemove', (e) => {
-            const rect = el.getBoundingClientRect();
-            const dx = (e.clientX - rect.left - rect.width  / 2) / (rect.width  / 2);
-            const dy = (e.clientY - rect.top  - rect.height / 2) / (rect.height / 2);
-            targetX = -dy * 5;
-            targetY =  dx * 7;
-            if (!rafId) rafId = requestAnimationFrame(tick);
-        });
-
-        el.addEventListener('mouseleave', () => {
-            targetX = 0;
-            targetY = 0;
-            if (!rafId) rafId = requestAnimationFrame(tick);
-        });
-    });
-}
+function initCaseImageTilt() {}
 
 // ==========================================
 // PHONE MOCKUP MOUSE TILT

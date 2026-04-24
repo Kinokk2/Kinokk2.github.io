@@ -58,101 +58,53 @@
                 </h1>
                 <p class="hero-subtitle">Available for freelance & full-time roles</p>
             </div>
-            <div class="scroll-indicator">
-                <span>Scroll to explore</span>
-                <div class="scroll-line"></div>
-            </div>
+        </div>
+        <div class="scroll-indicator">
+            <span>Scroll to explore</span>
+            <div class="scroll-line"></div>
         </div>
     </section>
 
     <!-- Projects Section -->
     <section class="projects">
-        <div class="container-full">
-            <!-- Project 1 - Pinterest -->
-            <article class="project-showcase project-showcase--fullbg" data-project="1">
-                <div class="project-bg-image" style="background-image: url('images/pinterest-hero.png');"></div>
-                <div class="project-bg-overlay"></div>
-                <div class="project-content project-content--fullbg">
-                    <div class="project-text project-text--fullbg">
-                        <h2 class="project-showcase-title">Pinterest,<br>Organized</h2>
-                        <p class="project-showcase-description">Improving the visibility and usability of Sections to help users better manage saved content and reduce clutter.</p>
+        <div class="container">
+            <div class="work-grid">
+
+                <!-- Pinterest Card -->
+                <article class="work-card work-card--pinterest">
+                    <div class="work-card__bg" style="background-image: url('images/pinterest-hero.webp');"></div>
+                    <div class="work-card__overlay"></div>
+                    <div class="work-card__info">
+                        <p class="work-card__label">UX/UI Case Study</p>
+                        <h2 class="work-card__title">Pinterest,<br>Organized</h2>
+                        <p class="work-card__desc">Improving the visibility and usability of Sections to help users better manage saved content and reduce clutter.</p>
                         <a href="case-studies/pinterest-redesign.html" class="project-showcase-link">
                             OPEN CASE STUDY <span class="arrow">→</span>
                         </a>
                     </div>
-                    <div class="project-visual pinterest-3d-scene project-visual--poke">
-                        <div class="phone-mockup phone-mockup--back">
-                            <div class="phone-mockup__frame">
-                                <div class="phone-mockup__notch"></div>
-                                <div class="phone-mockup__screen">
-                                    <img src="images/boards.png" alt="Pinterest app" />
-                                </div>
-                                <div class="phone-mockup__bar"></div>
-                            </div>
-                        </div>
-                        <div class="phone-mockup phone-mockup--front">
-                            <div class="phone-mockup__frame">
-                                <div class="phone-mockup__notch"></div>
-                                <div class="phone-mockup__screen">
-                                    <img src="images/boards.png" alt="Pinterest app" />
-                                </div>
-                                <div class="phone-mockup__bar"></div>
-                            </div>
-                        </div>
+                    <div class="work-card__preview">
+                        <img src="images/pinterest-hero.webp" alt="Pinterest app preview">
                     </div>
-                </div>
-            </article>
+                </article>
 
-            <!-- Project 2 - USPS -->
-            <article class="project-showcase" data-project="2">
-                <div class="project-content">
-                    <div class="project-text">
-                        <h2 class="project-showcase-title">USPS, Modernized</h2>
-                        <p class="project-showcase-description">Modernizing package tracking for clarity and ease of use. Redesigned the USPS mobile app to help users understand delivery progress at a glance with a cleaner interface.</p>
+                <!-- USPS Card -->
+                <article class="work-card work-card--usps">
+                    <div class="work-card__bg" style="background-image: url('images/usps hero.jpg');"></div>
+                    <div class="work-card__overlay"></div>
+                    <div class="work-card__info">
+                        <p class="work-card__label">UX/UI Case Study</p>
+                        <h2 class="work-card__title">USPS,<br>Modernized</h2>
+                        <p class="work-card__desc">Modernizing package tracking for clarity and ease of use. Redesigned the USPS mobile app for clarity at a glance.</p>
                         <a href="case-studies/usps-redesign.html" class="project-showcase-link">
                             OPEN CASE STUDY <span class="arrow">→</span>
                         </a>
                     </div>
-                    <div class="project-visual">
-                        <div class="project-main-image project-bg--usps">
-                            <div class="image-placeholder">
-                                <span>USPS Hero Image</span>
-                            </div>
-                        </div>
-                        <div class="project-preview-card project-bg--usps">
-                            <div class="image-placeholder">
-                                <span>Preview</span>
-                            </div>
-                        </div>
+                    <div class="work-card__preview">
+                        <img src="images/usps hero.jpg" alt="USPS app preview">
                     </div>
-                </div>
-            </article>
+                </article>
 
-            <!-- Project 3 - Under Construction -->
-            <article class="project-showcase" data-project="3">
-                <div class="project-content">
-                    <div class="project-text">
-                        <h2 class="project-showcase-title">?????</h2>
-                        <p class="project-showcase-description">New project coming soon. Stay tuned for updates on this exciting design challenge.</p>
-                        <a href="#" class="project-showcase-link disabled" onclick="event.preventDefault();">
-                            COMING SOON <span class="arrow">→</span>
-                        </a>
-                    </div>
-                    <div class="project-visual">
-                        <div class="project-main-image project-bg--coming-soon">
-                            <div class="image-placeholder under-construction">
-                                <span class="construction-icon">🚧</span>
-                                <span class="construction-label">UNDER CONSTRUCTION</span>
-                            </div>
-                        </div>
-                        <div class="project-preview-card project-bg--coming-soon">
-                            <div class="image-placeholder">
-                                <span>Coming Soon</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </article>
+            </div>
         </div>
     </section>
 
@@ -163,11 +115,19 @@
         <span class="copy-notification" id="copyNotification">Email copied!</span>
     </div>
 
+    <!-- Mobile email (shown between cards and footer on mobile only) -->
+    <div class="mobile-email-row">
+        <span onclick="copyEmail(event)">kelvinkyeremehh&#64;gmail.com</span>
+    </div>
+
     <!-- Footer -->
     <footer class="footer fade-up" data-delay="2">
         <div class="container">
             <div class="footer-content">
-                <p>&copy; 2024 Kelvin Kyeremeh. All rights reserved.</p>
+                <p>&copy; 2026 Kelvin Kyeremeh. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="https://www.linkedin.com/in/kelvin-kyeremeh-b61089263" target="_blank">LinkedIn</a>
+                </div>
             </div>
         </div>
     </footer>
