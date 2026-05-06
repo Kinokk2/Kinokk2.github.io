@@ -4,95 +4,11 @@
 
 
 // ==========================================
-// CUSTOM CURSOR
+// CUSTOM CURSOR — disabled, using OS default
+// Re-enable by removing the early return and
+// uncommenting the cursor HTML elements.
 // ==========================================
-function initCustomCursor() {
-    const cursor = document.querySelector('.cursor');
-    const cursorFollower = document.querySelector('.cursor-follower');
-
-    if (!cursor || !cursorFollower) return;
-
-    if ('ontouchstart' in window) {
-        cursor.style.display = 'none';
-        cursorFollower.style.display = 'none';
-        document.body.style.cursor = 'default';
-        return;
-    }
-
-    let mouseX = -100, mouseY = -100;
-    let cursorX = -100, cursorY = -100;
-    let followerX = -100, followerY = -100;
-    let cursorScale = 1, followerScale = 1;
-    let rafId = null;
-
-    let started = false;
-    document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-        if (!started) {
-            cursorX = followerX = mouseX;
-            cursorY = followerY = mouseY;
-            started = true;
-        }
-        if (!rafId) rafId = requestAnimationFrame(animateCursor);
-    }, { passive: true });
-
-    function lerp(a, b, t) { return a + (b - a) * t; }
-
-    function animateCursor() {
-        const dx  = mouseX - cursorX;
-        const dy  = mouseY - cursorY;
-        const fdx = mouseX - followerX;
-        const fdy = mouseY - followerY;
-
-        cursorX   += dx  * 0.35;
-        cursorY   += dy  * 0.35;
-        followerX += fdx * 0.15;
-        followerY += fdy * 0.15;
-
-        cursorScale   = lerp(cursorScale,   isHovering ? 2   : 1,   0.15);
-        followerScale = lerp(followerScale, isHovering ? 1.5 : 1,   0.12);
-
-        cursor.style.transform         = `translate(${cursorX - 5}px, ${cursorY - 5}px) scale(${cursorScale})`;
-        cursorFollower.style.transform = `translate(${followerX - 20}px, ${followerY - 20}px) scale(${followerScale})`;
-
-        const converged = Math.abs(dx) < 0.1 && Math.abs(dy) < 0.1 &&
-                          Math.abs(fdx) < 0.1 && Math.abs(fdy) < 0.1 &&
-                          Math.abs(cursorScale - (isHovering ? 2 : 1)) < 0.01 &&
-                          Math.abs(followerScale - (isHovering ? 1.5 : 1)) < 0.01;
-        if (converged) { rafId = null; return; }
-        rafId = requestAnimationFrame(animateCursor);
-    }
-
-    let isHovering = false;
-    const HOVER_SELECTOR = 'a, button, .project-showcase, input, textarea';
-    document.addEventListener('mouseover', (e) => {
-        if (!e.target.closest(HOVER_SELECTOR)) return;
-        if (isHovering) return;
-        isHovering = true;
-        cursor.style.opacity = '0.8';
-        cursorFollower.style.opacity = '0.3';
-        if (!rafId) rafId = requestAnimationFrame(animateCursor);
-    }, { passive: true });
-    document.addEventListener('mouseout', (e) => {
-        if (!e.target.closest(HOVER_SELECTOR)) return;
-        if (e.relatedTarget && e.relatedTarget.closest(HOVER_SELECTOR)) return;
-        isHovering = false;
-        cursor.style.opacity = '1';
-        cursorFollower.style.opacity = '0.5';
-        if (!rafId) rafId = requestAnimationFrame(animateCursor);
-    }, { passive: true });
-
-    document.addEventListener('mouseleave', () => {
-        cursor.style.opacity = '0';
-        cursorFollower.style.opacity = '0';
-    });
-
-    document.addEventListener('mouseenter', () => {
-        cursor.style.opacity = '1';
-        cursorFollower.style.opacity = '0.5';
-    });
-}
+function initCustomCursor() {}
 
 // ==========================================
 // MOBILE MENU
@@ -114,6 +30,9 @@ function initMobileMenu() {
         mobileMenu.classList.toggle('active');
         document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
     });
+
+    const closeBtn = document.querySelector('.mobile-menu-close');
+    if (closeBtn) closeBtn.addEventListener('click', closeMenu);
 
     document.querySelectorAll('.mobile-nav-link').forEach(link => {
         link.addEventListener('click', closeMenu);
@@ -147,7 +66,6 @@ function initScrollAnimations() {
 // ==========================================
 function initNavbarScroll() {
     const nav = document.querySelector('.nav');
-    const caseNav = document.querySelector('.case-nav');
     let ticking = false;
     let scrollHeight = document.documentElement.scrollHeight;
 
@@ -162,12 +80,10 @@ function initNavbarScroll() {
             const atBottom = window.innerHeight + scrollY >= scrollHeight - 2;
 
             if (nav) {
-                nav.classList.toggle('scrolled', scrollY > 100);
                 document.body.classList.toggle('scrolled', scrollY > 100);
             }
 
             document.body.classList.toggle('at-bottom', atBottom);
-            if (caseNav) caseNav.classList.toggle('scrolled', scrollY > 50);
             ticking = false;
         });
     }, { passive: true });
@@ -183,11 +99,14 @@ function navigateTo(url) {
 }
 
 function initPageTransitions() {
-    window.addEventListener('DOMContentLoaded', () => {
+    // Two rAF calls ensure the overlay has painted at opacity:1
+    // before we add page-fade-in and start the fade-out.
+    // NOTE: do NOT wrap in DOMContentLoaded — by the time init()
+    // runs, that event has already fired and a nested listener
+    // would never execute.
+    requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-                document.body.classList.add('page-fade-in');
-            });
+            document.body.classList.add('page-fade-in');
         });
     });
 
@@ -205,16 +124,11 @@ function initPageTransitions() {
 // PROJECT CARD INTERACTIONS
 // ==========================================
 function initProjectCards() {
-    document.querySelectorAll('.project-showcase, .work-card').forEach(card => {
-        const link = card.querySelector('.project-showcase-link');
-        if (!link || link.classList.contains('disabled')) return;
-        link.addEventListener('click', () => {
-            const arrow = link.querySelector('.arrow');
-            if (arrow) {
-                arrow.style.display = 'inline-block';
-                arrow.style.animation = 'spin 0.5s ease-in-out';
-            }
-        });
+    document.querySelectorAll('.work-card[data-href]').forEach(card => {
+        const href = card.dataset.href;
+        if (!href) return;
+        card.style.cursor = 'pointer';
+        card.addEventListener('click', () => navigateTo(href));
     });
 }
 
@@ -320,6 +234,85 @@ function initPhoneTilt() {
 }
 
 // ==========================================
+// HERO PARALLAX — case study pages
+// ==========================================
+function initHeroParallax() {
+    const hero = document.querySelector('.case-hero-fullscreen');
+    if (!hero) return;
+
+    const img = hero.querySelector('.hero-bg-image');
+    if (!img) return;
+
+    const heroHeight = hero.offsetHeight;
+    let ticking = false;
+
+    window.addEventListener('scroll', () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+            const scrollY = window.pageYOffset;
+            if (scrollY <= heroHeight) {
+                img.style.transform = `translateY(${scrollY * 0.25}px)`;
+            }
+            ticking = false;
+        });
+    }, { passive: true });
+}
+
+// ==========================================
+// MOUSE GRADIENT BACKGROUND
+// ==========================================
+function initMouseGradient() {
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let rafId = null;
+
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        if (!rafId) {
+            rafId = requestAnimationFrame(() => {
+                document.documentElement.style.setProperty('--mouse-x', mouseX + 'px');
+                document.documentElement.style.setProperty('--mouse-y', mouseY + 'px');
+                rafId = null;
+            });
+        }
+    }, { passive: true });
+}
+
+// ==========================================
+// GET IN TOUCH — STICKY ABOVE FOOTER
+// ==========================================
+function initGetInTouchSticky() {
+    const el = document.querySelector('.get-in-touch');
+    const footer = document.querySelector('.footer');
+    if (!el || !footer) return;
+
+    const defaultGap = 32; // 2rem in px
+    let ticking = false;
+
+    function update() {
+        const footerTop = footer.getBoundingClientRect().top;
+        if (footerTop < window.innerHeight) {
+            // Footer is entering the viewport — push the element above it
+            el.style.bottom = (window.innerHeight - footerTop + defaultGap) + 'px';
+        } else {
+            el.style.bottom = defaultGap + 'px';
+        }
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(update);
+    }, { passive: true });
+
+    window.addEventListener('resize', update, { passive: true });
+    update();
+}
+
+// ==========================================
 // COPY EMAIL
 // ==========================================
 function copyEmail(event) {
@@ -334,29 +327,9 @@ function copyEmail(event) {
 
 
 // ==========================================
-// INIT
-// ==========================================
-function init() {
-    initPageTransitions();
-    initCustomCursor();
-    initMobileMenu();
-    initScrollAnimations();
-    initNavbarScroll();
-    initProjectCards();
-    initCaseImageTilt();
-    initPhoneTilt();
-}
-
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-} else {
-    init();
-}
-
-// ==========================================
 // FORCE PDF DOWNLOAD
 // ==========================================
-document.addEventListener('DOMContentLoaded', () => {
+function initPDFDownload() {
     document.querySelectorAll('a[download][href$=".pdf"]').forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
@@ -369,7 +342,30 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.removeChild(a);
         });
     });
-});
+}
+
+// ==========================================
+// INIT
+// ==========================================
+function init() {
+    initPageTransitions();
+    initCustomCursor();
+    initMobileMenu();
+    initScrollAnimations();
+    initNavbarScroll();
+    initProjectCards();
+    initPhoneTilt();
+    initHeroParallax();
+    initGetInTouchSticky();
+    initMouseGradient();
+    initPDFDownload();
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
+}
 
 // ==========================================
 // BROWSER BACK/FORWARD — prevent stale cache
