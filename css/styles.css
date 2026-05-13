@@ -2583,3 +2583,114 @@ a.stack-card:hover {
     box-shadow: 0 4px 12px rgba(236, 72, 153, 0.4);
 }
 
+/* ==========================================
+   ART PAGE
+   ========================================== */
+.art-hero {
+    padding-top: calc(var(--spacing-xl) + 80px);
+    padding-bottom: var(--spacing-md);
+}
+
+.art-hero-title {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.75rem;
+}
+
+.art-hero-subtitle {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    max-width: 500px;
+}
+
+/* 2-column gallery grid */
+.art-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    padding-bottom: var(--spacing-xl);
+}
+
+.art-item {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--bg-light);
+    aspect-ratio: 4 / 5;
+    cursor: default;
+}
+
+.art-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+    transition: transform 0.55s cubic-bezier(0.25, 0, 0, 1);
+}
+
+/* Subtle label on hover */
+.art-item__label {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1.5rem 1.25rem 1.25rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%);
+    color: #fff;
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.art-item:hover img {
+    transform: scale(1.04);
+}
+
+.art-item:hover .art-item__label {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Fade-in stagger */
+.art-item {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.3s ease;
+}
+
+.art-item:nth-child(2) { transition-delay: 0.08s; }
+.art-item:nth-child(3) { transition-delay: 0.12s; }
+.art-item:nth-child(4) { transition-delay: 0.18s; }
+.art-item:nth-child(5) { transition-delay: 0.22s; }
+.art-item:nth-child(6) { transition-delay: 0.28s; }
+
+.art-item.in-view {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.art-item.in-view:hover {
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+    transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .art-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+    .art-item {
+        aspect-ratio: 4 / 5;
+        border-radius: 12px;
+    }
+}
+
