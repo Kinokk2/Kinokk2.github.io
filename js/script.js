@@ -345,6 +345,38 @@ function initPDFDownload() {
 }
 
 // ==========================================
+// LIGHTBOX
+// ==========================================
+function initLightbox() {
+    const lightbox = document.querySelector('.lightbox');
+    if (!lightbox) return;
+
+    const lightboxImg = lightbox.querySelector('.lightbox-img');
+    const backdrop = lightbox.querySelector('.lightbox-backdrop');
+    const closeBtn = lightbox.querySelector('.lightbox-close');
+
+    document.querySelectorAll('.art-item img').forEach(img => {
+        img.addEventListener('click', () => {
+            lightboxImg.src = img.src;
+            lightboxImg.alt = img.alt;
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+    });
+
+    function closeLightbox() {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    backdrop.addEventListener('click', closeLightbox);
+    closeBtn.addEventListener('click', closeLightbox);
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closeLightbox();
+    });
+}
+
+// ==========================================
 // INIT
 // ==========================================
 function init() {
@@ -359,6 +391,7 @@ function init() {
     initGetInTouchSticky();
     initMouseGradient();
     initPDFDownload();
+    initLightbox();
 }
 
 if (document.readyState === 'loading') {
